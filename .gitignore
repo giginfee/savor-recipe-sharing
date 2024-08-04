@@ -1,0 +1,19 @@
+# Node.js dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Environment variables file
+*.env
+
+# Logs
+*.log
+
+# Dependency directories
+jspm_packages/
+
