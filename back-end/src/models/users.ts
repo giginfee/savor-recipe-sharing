@@ -3,11 +3,12 @@ import validator from 'validator';
 import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
+    _id?:string
     username: string;
     email: string;
     photo?: string;
     password: string;
-    passwordConfirm: string;
+    passwordConfirm?: string;
     passwordChangedAt?: Date;
     passwordResetToken?: string;
     passwordResetExpires?: Date;
