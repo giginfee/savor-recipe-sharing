@@ -3,6 +3,7 @@ import validator from 'validator';
 import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
+    admin?:boolean
     _id?:string
     username: string;
     email: string;
@@ -18,6 +19,9 @@ const userSchema = new mongoose.Schema<IUser>({
     username:{
         type:String,
         required:[true, "Every user must have a username"]
+    },
+    admin:{
+        type:Boolean
     },
     email:{
         type:String,
@@ -52,6 +56,7 @@ const userSchema = new mongoose.Schema<IUser>({
     passwordResetExpires: Date
 })
 
+
 userSchema.pre('save',async function(next){
     if(!this.isModified('password')){
         return next()
@@ -65,11 +70,25 @@ userSchema.pre('save',async function(next){
 })
 
 
-userSchema.methods.isPasswordCorrect = async function(
-    newPassword:string,
+export const isPasswordCorrect = async function(
+    password:string,
     actualPassword:string
 ) {
-    return await bcrypt.compare(newPassword, actualPassword);
+    return await bcrypt.compare(password, actualPassword);
+};
+
+export const changedPasswordAfter = function(JWTTimestamp:number,passwordChangedAt:Date ) {
+    if (passwordChangedAt) {
+        const changedTimestamp = parseInt(
+            `${passwordChangedAt.getTime() / 1000}`,
+            10
+        );
+
+        return JWTTimestamp < changedTimestamp;
+    }
+
+    // False means NOT changed
+    return false;
 };
 
 export const User = mongoose.model<IUser>('User', userSchema);

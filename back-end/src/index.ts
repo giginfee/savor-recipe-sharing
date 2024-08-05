@@ -8,6 +8,7 @@ import mongoose from 'mongoose'
 import { resolve } from 'path';
 import {AppError} from "./utils/AppError";
 import {globalErrorHandler} from "./controllers/errorController";
+import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 
 
@@ -44,6 +45,7 @@ app.listen(port, () => {
 });
 
 
+app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 
 

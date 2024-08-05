@@ -4,8 +4,7 @@ import { MongoServerError  } from 'mongodb';
 import mongoose from "mongoose";
 
 export const globalErrorHandler = (err:Error | AppError, req:express.Request, res:express.Response, next:express.NextFunction) => {
-    console.log("Error", err )
-    // console.log("Error name", err.name)
+    console.error("Global error: ", err.message )
 
     if(err instanceof mongoose.Error.ValidationError) {
         err = handleValidationErrorDB(err);
