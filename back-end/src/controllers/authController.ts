@@ -1,5 +1,14 @@
 import express from "express";
-import {IUser, createUser, getUsers, getUserById, User, getUserByEmail, isPasswordCorrect} from "../models/users";
+import {
+    IUser,
+    createUser,
+    getUsers,
+    getUserById,
+    User,
+    getUserByEmail,
+    isPasswordCorrect,
+    createConfirmToken, confirmEmailById
+} from "../models/users";
 import {AppError} from "../utils/AppError";
 import {getUserFromToken, sendJWTToken} from "../utils/jwtTool"
 import {catchError} from "../utils/errorTools";
@@ -55,18 +64,36 @@ export const updatePassword = catchError(async (req:express.Request, res: expres
 
 })
 
+export const sendConfirmEmailToken =  catchError(async (req:express.Request, res: express.Response)=>{
+    let user = await getUserFromToken(getToken(req))
+    let token = await createConfirmToken(user._id)
 
-export const getAllUsers = catchError(async (req:express.Request, res: express.Response)=>
-{
-    const users = await getUsers();
+    // TO DO: send token to email
+
+    console.log(token)
 
     res.status(200).json({
         status: 'success',
-        results: users.length,
         data: {
-            data: users
         }
     });
+
+
+
+})
+export const confirmEmail =  catchError(async (req:express.Request, res: express.Response)=>{
+    let user = await getUserFromToken(getToken(req))
+
+    let token = req.params.token
+    user = await confirmEmailById(user._id, token)
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            user
+        }
+    });
+
 })
 
 

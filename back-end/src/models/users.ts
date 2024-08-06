@@ -1,9 +1,12 @@
 import mongoose from 'mongoose'
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+import {AppError} from "../utils/AppError";
 
 export interface IUser extends Document {
     admin?:boolean
+    emailConfirmed:boolean
     _id?:string
     username: string;
     email: string;
@@ -11,8 +14,8 @@ export interface IUser extends Document {
     password: string;
     passwordConfirm?: string;
     passwordChangedAt?: Date;
-    passwordResetToken?: string;
-    passwordResetExpires?: Date;
+    confirmToken?: string;
+    confirmExpires?: Date;
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -22,6 +25,10 @@ const userSchema = new mongoose.Schema<IUser>({
     },
     admin:{
         type:Boolean
+    },
+    emailConfirmed:{
+        type:Boolean,
+        default:false
     },
     email:{
         type:String,
@@ -51,9 +58,19 @@ const userSchema = new mongoose.Schema<IUser>({
         },
         select: false
     },
-    passwordChangedAt: Date,
-    passwordResetToken: String,
-    passwordResetExpires: Date
+    passwordChangedAt: {
+        type:Date,
+        select:false
+    },
+    confirmExpires: {
+        type:Date,
+        select:false
+    },
+    confirmToken: {
+        type:String,
+        select:false
+    }
+
 })
 
 
@@ -104,12 +121,54 @@ export const updateUserById = async (userId:string, user:Omit<IUser, 'password' 
         new: true,
         runValidators: true
     });
-
     return updatedUser;
 }
+export const confirmEmailById = async (userId:string, token:string) => {
+    const hashedToken = crypto
+        .createHash('sha256')
+        .update(token)
+        .digest('hex')
+
+
+    const user = await User.findOne({
+        confirmToken: hashedToken,
+        confirmExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+        throw new AppError('Confirm token is invalid or has expired', 400);
+    }
+    user.confirmToken = undefined;
+    user.confirmExpires = undefined;
+    user.emailConfirmed = true;
+
+    await user.save();
+
+    return user;
+}
+
+
 export const deleteUser = async (userId:string) => {
     await User.findByIdAndDelete(userId)
 }
+
+export const createConfirmToken = async function(userId:string) {
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    let confirmToken = crypto
+        .createHash('sha256')
+        .update(resetToken)
+        .digest('hex');
+
+    let confirmExpires = Date.now() + 10 * 60 * 1000;
+
+    await User.findByIdAndUpdate(userId, {
+        confirmToken,
+        confirmExpires
+    })
+
+    return resetToken;
+};
 
 
 

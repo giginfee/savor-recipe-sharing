@@ -3,8 +3,6 @@ import {catchError} from "../utils/errorTools";
 import {AppError} from "../utils/AppError";
 import {createToken, getUserFromToken, JWT, MAXAGE, verify} from "../utils/jwtTool"
 import {changedPasswordAfter, getUserById} from "../models/users";
-import {promisify} from "util";
-import jwt from "jsonwebtoken";
 
 export const getToken = (req: express.Request)=> {
     let token;
