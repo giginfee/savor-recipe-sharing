@@ -123,7 +123,10 @@ export const updateUserById = async (userId:string, user:Omit<IUser, 'password' 
     });
     return updatedUser;
 }
-export const confirmEmailById = async (userId:string, token:string) => {
+
+
+
+export const findUserByToken = async (userId:string, token:string) => {
     const hashedToken = crypto
         .createHash('sha256')
         .update(token)
@@ -131,17 +134,31 @@ export const confirmEmailById = async (userId:string, token:string) => {
 
 
     const user = await User.findOne({
+        _id:userId,
         confirmToken: hashedToken,
         confirmExpires: { $gt: Date.now() }
     });
-
     if (!user) {
         throw new AppError('Confirm token is invalid or has expired', 400);
     }
     user.confirmToken = undefined;
     user.confirmExpires = undefined;
-    user.emailConfirmed = true;
+    return user
+}
+export const resetPasswordById = async (userId:string, token:string, password:string) => {
+    const user = await findUserByToken(userId, token)
 
+    console.log(user)
+    user.password = password;
+    user.passwordConfirm = password;
+    await user.save();
+
+    return user;
+}
+export const confirmEmailById = async (userId:string, token:string) => {
+    const user = await findUserByToken(userId, token)
+
+    user.emailConfirmed = true;
     await user.save();
 
     return user;
