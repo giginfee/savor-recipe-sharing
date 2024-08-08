@@ -1,6 +1,10 @@
 import * as dotenv from 'dotenv';
 import nodemailer from 'nodemailer'
 import {resolve} from "path";
+import {getConfirmEmailTemplate} from "../emailTemplates/confirmEmailTemplate";
+import {IUser} from "../models/users";
+import {htmlToText} from 'html-to-text'
+import {getResetPasswordTemplate} from "../emailTemplates/resetPasswordEmail";
 
 dotenv.config({ path: resolve(__dirname, '../../config.env') });
 
@@ -20,21 +24,27 @@ const newTransport = () => {
 
 
 export const  send = async (template:string, subject:string, toEmail:string)=>{
-    const html = "Hello"
     const from = `Giginfee <${process.env.EMAIL_FROM}>`;
 
     const mailOptions = {
         from: from,
         to: toEmail,
         subject,
-        html,
-        text: html
+        html:template,
+        text: htmlToText(template)
+
     };
 
     await newTransport().sendMail(mailOptions);
 }
 
-export const  sendWelcome = async() => {
-    await send('welcome', 'Welcome to the Savor Website!', '');
+export const  sendConfirmEmail = async(user:IUser, link:string) => {
+    let template = getConfirmEmailTemplate(link, user.username)
+    await send(template, 'Welcome to the Savor Website!', user.email);
+}
+
+export const  sendResetPasswordEmail = async(user:IUser, link:string) => {
+    let template = getResetPasswordTemplate(link, user.username)
+    await send(template, 'Reset password!', user.email);
 }
 

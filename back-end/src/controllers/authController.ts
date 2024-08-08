@@ -14,6 +14,7 @@ import {getUserFromToken, sendJWTToken} from "../utils/jwtTool"
 import {catchError} from "../utils/errorTools";
 import * as process from "process";
 import {getToken} from "../middleware/authMiddleware";
+import {sendConfirmEmail, sendResetPasswordEmail} from "../utils/emailTools";
 
 export const register = catchError(async (req:express.Request, res: express.Response, next:express.NextFunction)=> {
     await registerHelp(req,res, next)
@@ -87,6 +88,9 @@ export const sendConfirmEmailToken =  catchError(async (req:express.Request, res
     let token = await createConfirmToken(user._id)
 
     // TO DO: send token to email
+    await sendConfirmEmail(user, `${req.protocol}://${req.get(
+        'host'
+    )}/api/v1/auth/confirm-email/${token}`)
 
     console.log(`Confirm email token: ${token}`)
 
@@ -103,6 +107,9 @@ export const sendForgotPasswordToken =  catchError(async (req:express.Request, r
     let token = await createConfirmToken(user._id)
 
     // TO DO: send token to email
+    await sendResetPasswordEmail(user, `${req.protocol}://${req.get(
+        'host'
+    )}/api/v1/auth/forgot-password/${token}`)
 
     console.log(`Forgot password token: ${token}`)
 
