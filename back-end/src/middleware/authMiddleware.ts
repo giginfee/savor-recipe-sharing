@@ -18,18 +18,27 @@ export const getToken = (req: express.Request)=> {
     return token
 }
 export const authRequired = catchError(async (req, res, next) => {
-    // 1) Getting token and check of it's there
-    let token = getToken(req);
 
+    let token = getToken(req);
     if (!token) {
         throw new AppError('Please log in to get access.', 401)
     }
-
-    // 2) Verification token
-
     let currentUser= await getUserFromToken(token)
-
     next();
+
+})
+
+export const adminOnly = catchError(async (req, res, next) => {
+    let token = getToken(req);
+    if (!token) {
+        throw new AppError('Please log in to get access.', 401)
+    }
+    let currentUser= await getUserFromToken(token)
+    if (!currentUser.admin)
+        throw new AppError('Not administrator.', 401)
+    next()
+
+
 
 })
 

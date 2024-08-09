@@ -75,6 +75,7 @@ const userSchema = new mongoose.Schema<IUser>({
 
 
 userSchema.pre('save',async function(next){
+    this.email = this.email.toLowerCase()
     if(!this.isModified('password')){
         return next()
     }
@@ -116,8 +117,8 @@ export const getUserById = (id:string) => User.findById(id)
 export const createUser = async (user:IUser) => {
     return await User.create(user);
 }
-export const updateUserById = async (userId:string, user:Omit<IUser, 'password' | 'passwordConfirm'>) => {
-    const updatedUser = await User.findByIdAndUpdate(userId, user, {
+export const updateUserById = async (userId:string, userData:any) => {
+    const updatedUser = await User.findByIdAndUpdate(userId, userData, {
         new: true,
         runValidators: true
     });
@@ -165,7 +166,7 @@ export const confirmEmailById = async (userId:string, token:string) => {
 }
 
 
-export const deleteUser = async (userId:string) => {
+export const deleteUserById = async (userId:string) => {
     await User.findByIdAndDelete(userId)
 }
 
