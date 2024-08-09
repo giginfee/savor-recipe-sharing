@@ -1,4 +1,4 @@
-export const getResetPasswordTemplate = (link:string, name:string) =>{
+export const getResetPasswordTemplate = (code:string, name:string) =>{
     return `<!DOCTYPE html>
             <html lang="en">
             <head>
@@ -64,10 +64,10 @@ export const getResetPasswordTemplate = (link:string, name:string) =>{
                 </div>
                 <div class="email-body">
                     <p>Hi ${name},</p>
-                    <p>We received a request to reset your password. Please send your new password in the body request to the link below.</p>
+                    <p>We received a request to reset your password. Your personal code is below.</p>
                     <p>If you did not create an account with us, please ignore this email.</p>
                     <p style="text-align: center;">
-                       ${link}
+                       ${code}
                     </p>
                 </div>
             

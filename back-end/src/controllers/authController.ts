@@ -15,6 +15,7 @@ import {catchError} from "../utils/errorTools";
 import * as process from "process";
 import {getToken} from "../middleware/authMiddleware";
 import {sendConfirmEmail, sendResetPasswordEmail} from "../utils/emailTools";
+import * as path from "path";
 
 export const register = catchError(async (req:express.Request, res: express.Response, next:express.NextFunction)=> {
     await registerHelp(req,res, next)
@@ -87,10 +88,9 @@ export const sendConfirmEmailToken =  catchError(async (req:express.Request, res
 
     let token = await createConfirmToken(user._id)
 
-    // TO DO: send token to email
     await sendConfirmEmail(user, `${req.protocol}://${req.get(
         'host'
-    )}/api/v1/auth/confirm-email/${token}`)
+    )}/api/v1/auth/confirm-email/${user._id}/${token}`)
 
     console.log(`Confirm email token: ${token}`)
 
@@ -106,10 +106,7 @@ export const sendForgotPasswordToken =  catchError(async (req:express.Request, r
         throw new AppError("Email was not confirmed", 400)
     let token = await createConfirmToken(user._id)
 
-    // TO DO: send token to email
-    await sendResetPasswordEmail(user, `${req.protocol}://${req.get(
-        'host'
-    )}/api/v1/auth/forgot-password/${token}`)
+    await sendResetPasswordEmail(user, token)
 
     console.log(`Forgot password token: ${token}`)
 
@@ -122,19 +119,17 @@ export const sendForgotPasswordToken =  catchError(async (req:express.Request, r
 
 
 export const confirmEmail =  catchError(async (req:express.Request, res: express.Response)=>{
-    let user = await getUserFromToken(getToken(req))
+    // let user = await getUserFromToken(getToken(req))
+    let user = await getUserById(req.params.id)
+    if (!user)
+        throw new AppError('User is not found', 400)
     if(user.emailConfirmed)
         throw new AppError("Email was already confirmed", 400)
     
     let token = req.params.token
     user = await confirmEmailById(user._id, token)
 
-    res.status(200).json({
-        status: 'success',
-        data: {
-            user
-        }
-    });
+    res.status(200).sendFile(path.join(__dirname, '../templates/confirmEmailPage.html'));
 
 })
 

@@ -1,4 +1,6 @@
 import crypto from "crypto";
-import {sendWelcome} from "./utils/emailTools";
+import {sendConfirmEmail} from "./utils/emailTools";
+import {htmlToText} from "html-to-text";
+import {getConfirmEmailTemplate} from "./templates/confirmEmailTemplate";
 
-sendWelcome()
+// sendConfirmEmail({email:"giginfee@gmail.com", username: 'Gigi'},'/' )

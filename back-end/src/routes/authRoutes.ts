@@ -18,7 +18,7 @@ const router = express.Router();
 router.post('/register/admin/:password', registerAsAdmin);
 router.post('/register', register);
 router.post('/login', login);
-router.route('/confirm-email/:token').get(authRequired, confirmEmail);
+router.route('/confirm-email/:id/:token').get(confirmEmail);
 router.route('/confirm-email').get(authRequired, sendConfirmEmailToken);
 router.route('/forgot-password/:token').patch(authRequired, resetPassword);
 router.route('/forgot-password').get(authRequired, sendForgotPasswordToken);
