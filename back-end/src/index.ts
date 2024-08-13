@@ -10,11 +10,13 @@ import {AppError} from "./utils/AppError";
 import {globalErrorHandler} from "./controllers/errorController";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
+import { setupSwagger } from '../swagger';
 
 
 dotenv.config({ path: resolve(__dirname, '../config.env') });
 
 const app = express()
+setupSwagger(app);
 
 const DB = process.env.MONGO_URL.replace(
     '<PASSWORD>',
