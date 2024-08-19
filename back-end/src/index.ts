@@ -10,7 +10,7 @@ import {AppError} from "./utils/AppError";
 import {globalErrorHandler} from "./controllers/errorController";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
-import { setupSwagger } from '../swagger';
+import { setupSwagger } from './swagger';
 
 
 dotenv.config({ path: resolve(__dirname, '../config.env') });

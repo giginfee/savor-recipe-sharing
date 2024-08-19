@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import {AppError} from "../utils/AppError";
 
+
 export interface IUser extends Document {
     admin?:boolean
     emailConfirmed:boolean
