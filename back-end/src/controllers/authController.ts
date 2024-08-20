@@ -54,7 +54,7 @@ export const updatePassword = catchError(async (req:express.Request, res: expres
 
     let user = await getUserFromToken(getToken(req))
     if ( !req.body.passwordOld || !req.body.passwordNew || !req.body.passwordConfirm )
-        throw new AppError("Missing required fields", 404)
+        throw new AppError("Missing required fields", 400)
 
     if (!(await isPasswordCorrect(req.body.passwordOld, user.password))) {
         throw new AppError('Your current password is wrong.', 401);
@@ -88,9 +88,9 @@ export const sendConfirmEmailToken =  catchError(async (req:express.Request, res
 
     let token = await createConfirmToken(user._id)
 
-    await sendConfirmEmail(user, `${req.protocol}://${req.get(
-        'host'
-    )}/api/v1/auth/confirm-email/${user._id}/${token}`)
+    // await sendConfirmEmail(user, `${req.protocol}://${req.get(
+    //     'host'
+    // )}/api/v1/auth/confirm-email/${user._id}/${token}`)
 
     console.log(`Confirm email token: ${token}`)
 
@@ -106,7 +106,7 @@ export const sendForgotPasswordToken =  catchError(async (req:express.Request, r
         throw new AppError("Email was not confirmed", 400)
     let token = await createConfirmToken(user._id)
 
-    await sendResetPasswordEmail(user, token)
+    // await sendResetPasswordEmail(user, token)
 
     console.log(`Forgot password token: ${token}`)
 

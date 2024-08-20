@@ -1,8 +1,9 @@
 import swaggerJSDoc  from 'swagger-jsdoc';
 import {serve, setup} from 'swagger-ui-express';
 import { Express } from 'express';
-import { userSchema } from './swaggerSchemas/UserSchema';
-import { errorSchema } from './swaggerSchemas/ErrorSchema';
+import { userSchema } from './swaggerConfig/schemas/UserSchema';
+import { errorSchema } from './swaggerConfig/schemas/ErrorSchema';
+import {paths} from './swaggerConfig/paths/paths';
 
 
 const options:swaggerJSDoc.OAS3Options = {
@@ -37,6 +38,13 @@ const options:swaggerJSDoc.OAS3Options = {
                 bearerAuth: [],
             },
         ],
+        tags:[
+            {
+                name: "Auth",
+                description: "Authentication API"
+            }
+        ],
+        paths
     },
     apis: ['./src/routes/*.ts']
 };
