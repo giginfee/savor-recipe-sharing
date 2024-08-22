@@ -3,9 +3,10 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import compression from 'compression'
+import mongoSanitize from 'express-mongo-sanitize';
 import cors from 'cors'
 import mongoose from 'mongoose'
-import { resolve } from 'path';
+import path, { resolve } from 'path';
 import {AppError} from "./utils/AppError";
 import {globalErrorHandler} from "./controllers/errorController";
 import authRoutes from "./routes/authRoutes";
@@ -35,10 +36,11 @@ mongoose.connection.on("error",(err: Error)=>{
 app.use(cors({
     credentials:true
 }))
-
+app.use(mongoSanitize());
 app.use(compression())
 app.use(bodyParser.json())
 app.use(cookieParser())
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 const port = process.env.PORT || 3000;

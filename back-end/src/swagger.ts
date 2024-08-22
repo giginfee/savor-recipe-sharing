@@ -4,7 +4,10 @@ import { Express } from 'express';
 import { userSchema } from './swaggerConfig/schemas/UserSchema';
 import { errorSchema } from './swaggerConfig/schemas/ErrorSchema';
 import {paths} from './swaggerConfig/paths/paths';
+import * as dotenv from "dotenv";
+import {resolve} from "path";
 
+dotenv.config({ path: resolve(__dirname, '../config.env') });
 
 const options:swaggerJSDoc.OAS3Options = {
     definition: {
@@ -42,6 +45,10 @@ const options:swaggerJSDoc.OAS3Options = {
             {
                 name: "Auth",
                 description: "Authentication API"
+            },
+            {
+                name: "Users",
+                description: "Users API"
             }
         ],
         paths

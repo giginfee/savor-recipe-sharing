@@ -1,8 +1,7 @@
-export const updatePasswordPaths  = {
-    "/api/v1/auth/update-password": {
-        "patch": {
-            "summary": "Update password",
-            "tags": ["Auth"],
+export const updateUser  = {
+        "put": {
+            "summary": "Get all users. Admin only!",
+            "tags": ["Users"],
             "security": [
                 {
                     "bearerAuth": [] as any
@@ -14,25 +13,20 @@ export const updatePasswordPaths  = {
                     "application/json": {
                         "schema": {
                             "type": "object",
-                            "required": ["passwordOld","passwordNew", "passwordConfirm" ],
+                            "required": ["email", "username"],
                             "properties": {
-                                "passwordOld": {
+                                "email": {
                                     "type": "string",
-                                    "description": "Current password"
+                                    "description": "The updated email"
                                 },
-                                "passwordNew": {
+                                "username": {
                                     "type": "string",
-                                    "description": "New password"
-                                },
-                                "passwordConfirm": {
-                                    "type": "string",
-                                    "description": "Repeat password"
+                                    "description": "The updated username"
                                 }
                             },
                             "example": {
-                                "passwordOld": "password123",
-                                "passwordNew": "password12",
-                                "passwordConfirm": "password12"
+                                "email": "newemail@mail.com",
+                                "username": "newUsername"
                             }
                         }
                     }
@@ -40,7 +34,7 @@ export const updatePasswordPaths  = {
             },
             "responses": {
                 "200": {
-                    "description": "Password updated successfully",
+                    "description": "User updated successfully",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -48,10 +42,6 @@ export const updatePasswordPaths  = {
                                 "properties": {
                                     "status": {
                                         "type": "string"
-                                    },
-                                    "token": {
-                                        "type": "string",
-                                        "description": "JWT token for authentication"
                                     },
                                     "data": {
                                         "type": "object",
@@ -99,5 +89,4 @@ export const updatePasswordPaths  = {
             }
         }
     }
-}
 

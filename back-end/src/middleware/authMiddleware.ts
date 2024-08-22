@@ -35,7 +35,7 @@ export const adminOnly = catchError(async (req, res, next) => {
     }
     let currentUser= await getUserFromToken(token)
     if (!currentUser.admin)
-        throw new AppError('Not administrator.', 401)
+        throw new AppError('You don\'t have access.', 403)
     next()
 
 

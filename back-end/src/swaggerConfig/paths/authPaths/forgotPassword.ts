@@ -61,7 +61,7 @@ export const forgotPasswordPaths  = {
         }
     },
     "/api/v1/auth/forgot-password/{token}": {
-        "get": {
+        "patch": {
             "summary": "Reset password",
             "tags": ["Auth"],
             "security": [

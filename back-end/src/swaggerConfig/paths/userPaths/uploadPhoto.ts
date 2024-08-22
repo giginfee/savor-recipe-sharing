@@ -1,46 +1,34 @@
-export const updatePasswordPaths  = {
-    "/api/v1/auth/update-password": {
+
+export const uploadPhotoPaths  = {
+    "/api/v1/users/upload-photo": {
         "patch": {
-            "summary": "Update password",
-            "tags": ["Auth"],
+            "summary": "Upload new photo",
+            "tags": ["Users"],
             "security": [
                 {
                     "bearerAuth": [] as any
                 }
             ],
             "requestBody": {
-                "required": true,
                 "content": {
-                    "application/json": {
+                    "multipart/form-data": {
                         "schema": {
                             "type": "object",
-                            "required": ["passwordOld","passwordNew", "passwordConfirm" ],
                             "properties": {
-                                "passwordOld": {
+                                "photo": {
                                     "type": "string",
-                                    "description": "Current password"
-                                },
-                                "passwordNew": {
-                                    "type": "string",
-                                    "description": "New password"
-                                },
-                                "passwordConfirm": {
-                                    "type": "string",
-                                    "description": "Repeat password"
+                                    "format": "binary"
                                 }
                             },
-                            "example": {
-                                "passwordOld": "password123",
-                                "passwordNew": "password12",
-                                "passwordConfirm": "password12"
-                            }
+                            "required": ["photo"]
                         }
                     }
-                }
+                },
+                "required": true
             },
             "responses": {
                 "200": {
-                    "description": "Password updated successfully",
+                    "description": "Photo updated successfully",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -48,10 +36,6 @@ export const updatePasswordPaths  = {
                                 "properties": {
                                     "status": {
                                         "type": "string"
-                                    },
-                                    "token": {
-                                        "type": "string",
-                                        "description": "JWT token for authentication"
                                     },
                                     "data": {
                                         "type": "object",
@@ -100,4 +84,3 @@ export const updatePasswordPaths  = {
         }
     }
 }
-

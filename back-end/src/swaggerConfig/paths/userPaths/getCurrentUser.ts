@@ -1,46 +1,17 @@
-export const updatePasswordPaths  = {
-    "/api/v1/auth/update-password": {
-        "patch": {
-            "summary": "Update password",
-            "tags": ["Auth"],
+
+export const currentUserPaths  = {
+    "/api/v1/users/me": {
+        "get": {
+            "summary": "Get current user info",
+            "tags": ["Users"],
             "security": [
                 {
                     "bearerAuth": [] as any
                 }
             ],
-            "requestBody": {
-                "required": true,
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "type": "object",
-                            "required": ["passwordOld","passwordNew", "passwordConfirm" ],
-                            "properties": {
-                                "passwordOld": {
-                                    "type": "string",
-                                    "description": "Current password"
-                                },
-                                "passwordNew": {
-                                    "type": "string",
-                                    "description": "New password"
-                                },
-                                "passwordConfirm": {
-                                    "type": "string",
-                                    "description": "Repeat password"
-                                }
-                            },
-                            "example": {
-                                "passwordOld": "password123",
-                                "passwordNew": "password12",
-                                "passwordConfirm": "password12"
-                            }
-                        }
-                    }
-                }
-            },
             "responses": {
                 "200": {
-                    "description": "Password updated successfully",
+                    "description": "The user\`s info is received successfully",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -48,10 +19,6 @@ export const updatePasswordPaths  = {
                                 "properties": {
                                     "status": {
                                         "type": "string"
-                                    },
-                                    "token": {
-                                        "type": "string",
-                                        "description": "JWT token for authentication"
                                     },
                                     "data": {
                                         "type": "object",
@@ -100,4 +67,3 @@ export const updatePasswordPaths  = {
         }
     }
 }
-
